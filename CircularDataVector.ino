@@ -1,4 +1,4 @@
-//-----------------------------------------------last------------------------------
+//-----------------------------------------------------------------------------
 // Board:  NodeMCU 1.0 (ESP-12E Module)
 
 #include <Arduino.h>
@@ -36,41 +36,59 @@ class CircularVector {
       }
     }
 };
-//-----------------------------------------------------------------------------
 
 void setup() {
 
   Serial.begin(115200);
 
-  Serial.println("\n\nstart\n");
+  Serial.println("\n\nDemo start.");
 
-
+  // Create a data list for saving only the last 7-values added
   CircularVector* obj = new CircularVector( 7 );
 
-  obj->addValue(10);
-  obj->addValue(11);
-  obj->addValue(12);
-  obj->addValue(13);
-  obj->addValue(14);
-  obj->addValue(15);
-  obj->addValue(16);
-  obj->addValue(17);
-  obj->addValue(18);
-  obj->addValue(19);
+  // Populate the data list with an incoming sequence of new values over time
+  for (int i=0; i < 30; i++) obj->addValue(10 + i); //...sensor readings perhaps
 
-  // show current data vector summery elements from 0 to size()
-  Serial.printf("\nfirst: %d-%d, last: %d-%d, size: %d, sum: %d, smoothed: %.2f\n", 
+  // show current data vector summery and elements from 0 to size()
+  Serial.printf("\nSummary - vector order:\nfirst: %d-%d, last: %d-%d, size: %d, sum: %d, smoothed: %.2f\n", 
     obj->first, obj->data[obj->first], obj->last, obj->data[obj->last], obj->count, obj->sum, obj->getSmoothed());
   obj->showData();
 
-  // show current data vector summery elements from oldest to newest
-  Serial.printf("\nfirst: %d-%d, last: %d-%d, size: %d, sum: %d, smoothed: %.2f\n", 
+  // show current data vector summery and elements from oldest to newest
+  Serial.printf("\nSummary - data sequence order:\nfirst: %d-%d, last: %d-%d, size: %d, sum: %d, smoothed: %.2f\n", 
     obj->first, obj->data[obj->first], obj->last, obj->data[obj->last], obj->count, obj->sum, obj->getSmoothed());
   obj->showData(1);
 
-  Serial.println("\ndone\n");
+  Serial.println("\nDemo done.\n");
 }
 
 void loop() { }
 
 //-----------------------------------------------------------------------------
+
+/* Demo Output
+
+Demo start.
+
+Summary - vector order:
+first: 2-33, last: 1-39, size: 7, sum: 252, smoothed: 36.00
+ [0] = 38
+ [1] = 39
+ [2] = 33
+ [3] = 34
+ [4] = 35
+ [5] = 36
+ [6] = 37
+
+Summary - data sequence order:
+first: 2-33, last: 1-39, size: 7, sum: 252, smoothed: 36.00
+ [2] = 33
+ [3] = 34
+ [4] = 35
+ [5] = 36
+ [6] = 37
+ [0] = 38
+ [1] = 39
+
+Demo done.
+*/
